@@ -35,7 +35,7 @@
 	path(keep, s, cornfield).
 	path(keep, n, dungeon).
 
-	path(dungeon, s, keep).
+	path(dungeion, s, keep).
 
 %people.
 	person(sellsword).
