@@ -19,6 +19,7 @@
 	coord(cornfield, '0,1').
 	coord(marketplace, '1,0').
 	coord(keep, '1,1').
+	coord(dungeon, '1,2').
 
 %world paths
 	path(hamlet, e, cornfield).
@@ -32,6 +33,9 @@
 
 	path(keep, w, marketplace).
 	path(keep, s, cornfield).
+	path(keep, n, dungeon).
+
+	path(dungeon, s, keep).
 
 %people.
 	person(sellsword).
@@ -61,7 +65,7 @@ observe:-
 list_stuff(X):-
 	current_location(X),
 	is_at(X, THING),
-	write('you notice a '), write(THING), write(' is located here.'), nl.
+	write('you notice a '), write(THING), write(' is located here.'), nl, fail.
 list_stuff(_).
 
 %talk to X, X must be a person and be where the player is.
@@ -76,7 +80,7 @@ talk_to(X):-
 list_things:-
 	current_location(X),
 	list_stuff(X),
-	list_locations.
+	list_locations(X).
 
 %check bag
 check_bag:-
@@ -89,10 +93,11 @@ list_my_stuff:-
 	in_bag(X).
 
 %check what i can travel to
-list_locations:-
+list_locations(X):-
 	current_location(X),
 	path(X,Y,Z),
 	write('i can go '), write(Y), write(' to get to the '), write(Z), nl, fail.
+list_locations(_).
 
 %travel to a new grid position
 travel(X):-
