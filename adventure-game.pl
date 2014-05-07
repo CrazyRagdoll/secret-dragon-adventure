@@ -1,12 +1,13 @@
 %declare current_location as dynamic, so it can change.
 :- dynamic current_location/1.
+:-retractall(current_location(_)).
 
 %initial setup.
 	current_location(hamlet). % start at grid position 0,0
 
 %location of stuff
 	is_at(hamlet, sellsword).
-	is_at(hamlet, blacksmith).
+	is_at(marketplace, blacksmith).
 	is_at(keep, mesanth).
 
 %in bag
@@ -16,20 +17,20 @@
 %world
 	coord(hamlet, '0,0').
 	coord(cornfield, '0,1').
-	coord(gatehouse, '1,0').
+	coord(marketplace, '1,0').
 	coord(keep, '1,1').
 
 %world paths
 	path(hamlet, e, cornfield).
-	path(hamlet, n, gatehouse).
+	path(hamlet, n, marketplace).
 
 	path(cornfield, w, hamlet).
 	path(cornfield, n, keep).
 
-	path(gatehouse, s, hamlet).
-	path(gatehouse, e, keep).
+	path(marketplace, s, hamlet).
+	path(marketplace, e, keep).
 
-	path(keep, w, gatehouse).
+	path(keep, w, marketplace).
 	path(keep, s, cornfield).
 
 %people.
@@ -51,14 +52,17 @@ observe:-
 	write(X), nl,
 	write('grid position '),
 	write(Y), nl,
-	list_stuff,
-	list_locations.
+	list_things, !.
 
 %list all things where the player currently is.
-list_stuff:-
-	current_location(Y),
-	is_at(Y, THING),
-	write('you notice a '), write(THING), write(' is located here.'), nl, fail.
+%TODO:due to Issue #2, a location can only contain one thing, due to the fail condition needed to
+%loop through the facts. could be re-implemented if the nearby items and nearby locations are listed
+%under seperated actions.
+list_stuff(X):-
+	current_location(X),
+	is_at(X, THING),
+	write('you notice a '), write(THING), write(' is located here.'), nl.
+list_stuff(_).
 
 %talk to X, X must be a person and be where the player is.
 talk_to(X):-
@@ -66,16 +70,23 @@ talk_to(X):-
 	person(X),
 	is_at(Z, X),
 	response(X, T),
-	write(T), nl.
+	write(T), nl, !.
+
+%list items and nearby locations.
+list_things:-
+	current_location(X),
+	list_stuff(X),
+	list_locations.
 
 %check bag
 check_bag:-
-	list_my_stuff.
+	list_my_stuff, !.
 
 %list stuff in the players bag
 list_my_stuff:-
 	in_bag(X),
-	write('i have a '), write(X), nl, fail.
+	write('i have a '), write(X), nl, fail,
+	in_bag(X).
 
 %check what i can travel to
 list_locations:-
