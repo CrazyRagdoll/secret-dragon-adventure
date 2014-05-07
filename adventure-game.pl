@@ -51,14 +51,14 @@ observe:-
 	write(X), nl,
 	write('grid position '),
 	write(Y), nl,
-	list_locations,
-	list_stuff(X).
+	list_stuff,
+	list_locations.
 
 %list all things where the player currently is.
-list_stuff(X):-
-	is_at(X, THING),
+list_stuff:-
+	current_location(Y),
+	is_at(Y, THING),
 	write('you notice a '), write(THING), write(' is located here.'), nl, fail.
-list_stuff(X).
 
 %talk to X, X must be a person and be where the player is.
 talk_to(X):-
@@ -83,9 +83,10 @@ list_locations:-
 	path(X,Y,Z),
 	write('i can go '), write(Y), write(' to get to the '), write(Z), nl, fail.
 
-%travel
+%travel to a new grid position
 travel(X):-
 	current_location(Y),
 	path(Y,X,Z),
-	%current_location(Z),
-	write('you make your way to the'), write(Z).
+	retract(current_location(Y)),
+	assert(current_location(Z)),
+	write('you make your way to the '), write(Z), nl, !.
