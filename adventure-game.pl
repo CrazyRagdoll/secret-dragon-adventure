@@ -87,5 +87,5 @@ list_locations:-
 travel(X):-
 	current_location(Y),
 	path(Y,X,Z),
-	current_location(Z),
+	%current_location(Z),
 	write('you make your way to the'), write(Z).
