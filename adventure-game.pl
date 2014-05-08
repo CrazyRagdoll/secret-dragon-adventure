@@ -118,3 +118,9 @@ update_locations:-
 	path(X,Y,Z),
 	fill_locations(Z),
 	fail.
+
+clear_location:-
+	wlbxget((my_gui,4000),0,T),T=''.
+clear_location:-
+	wlbxdel((my_gui,4000),0),
+	clear_location.
