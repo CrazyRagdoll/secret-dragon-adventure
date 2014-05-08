@@ -1,0 +1,66 @@
+% first, must create the dialog window by using the dialog editor
+% and EXPORTING to the I/E window. From there, copy its contents
+% and paste them to this window, as below:
+
+my_gui :- 
+   _S1 = [dlg_ownedbyprolog,ws_sysmenu,ws_maximizebox,ws_minimizebox,ws_thickframe,ws_caption],
+   _S2 = [ws_child,ws_tabstop,ws_visible,bs_defpushbutton,bs_text,bs_center,bs_vcenter],
+   _S3 = [ws_child,ws_tabstop,ws_visible,bs_pushbutton,bs_text,bs_center,bs_vcenter],
+   _S4 = [ws_child,ws_border,ws_tabstop,ws_visible,es_left,es_multiline,es_autohscroll,es_autovscroll],
+   _S5 = [ws_child,ws_border,ws_tabstop,ws_visible,ws_vscroll,lbs_sort],
+   _S6 = [ws_child,ws_visible,ss_left],
+   _S7 = [ws_child,ws_tabstop,ws_visible,ws_ex_transparent,bs_pushbutton,bs_text,bs_center,bs_vcenter],
+   _S8 = [ws_child,ws_border,ws_tabstop,ws_visible,lbs_sort],
+   wdcreate(  my_gui,        `Dragon Adventure`,           1127,  85, 376, 538, _S1 ),
+   wccreate( (my_gui,1000),  button,  `Adventure!`,          20, 300, 130,  20, _S2 ),
+   wccreate( (my_gui,1001),  button,  `Exit`,               280,  10,  70,  30, _S3 ),
+   wccreate( (my_gui,8000),  edit,    `Enter an action!`,    10, 330, 160,  40, _S4 ),
+   wccreate( (my_gui,4000),  listbox, `Inventory`,          190, 440, 160,  50, _S5 ),
+   wccreate( (my_gui,1002),  button,  `Update Inventory!`,  210, 390, 120,  20, _S3 ),
+   wccreate( (my_gui,11000), static,  ` Actions:`,          190, 310,  80,  20, _S6 ),
+   wccreate( (my_gui,4001),  listbox, `Actions`,            190, 330, 160,  60, _S5 ),
+   wccreate( (my_gui,11001), static,  ` Location:`,          10, 420,  80,  20, _S6 ),
+   wccreate( (my_gui,4002),  listbox, `Locations`,           10, 440, 160,  50, _S5 ),
+   wccreate( (my_gui,1003),  button,  `Update Locations!`,   30, 390, 120,  20, _S7 ),
+   wccreate( (my_gui,11002), static,  ` Inventory:`,        190, 420,  80,  20, _S6 ),
+   wccreate( (my_gui,4003),  listbox, `Coord`,              100, 420,  70,  20, _S8 ).
+
+doit:-							
+	my_gui,						
+	wshow(my_gui,1),					
+	window_handler(my_gui,my_gui_handler),		
+	show_dialog(my_gui).				
+ 
+my_gui_handler((my_gui,1000), msg_button,_,_):-
+	wtext((my_gui,8000), Text),
+	writeq(Text),
+	nl,
+	update_actions.
+
+my_gui_handler((my_gui,1001), msg_button,_,_):-			
+	msgbox('Warning', 'This will exit the game!',49,B),	
+	check_close(B,C),					
+	wshow(my_gui,0).				
+
+check_close(B,C):-				
+	B=1, C=1.				
+
+my_gui_handler((my_gui,1004), msg_button,_,_):-
+	update_inventory,
+	wshow(my_gui,0).
+
+my_gui_handler((my_gui,1003), msg_button,_,_):-		
+	update_locations,			
+	wshow(my_gui,0).	
+
+fill_inventory(X):-
+	atom_string(X, Y),		
+	wlbxadd((my_gui,4000),-1, Y).
+
+fill_actions(X):-
+	atom_string(X, Y),		
+	wlbxadd((my_gui,4001),-1, Y).
+
+fill_locations(X):-
+	atom_string(X, Y),		
+	wlbxadd((my_gui,4002),-1, Y).
