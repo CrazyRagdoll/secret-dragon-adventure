@@ -29,22 +29,6 @@
 	limit([_,7], n).
 	limit([0,_], w).
 
-%world paths
-%	path(hamlet, e, cornfield).
-%	path(hamlet, n, marketplace).
-
-%	path(cornfield, w, hamlet).
-%	path(cornfield, n, keep).
-
-%	path(marketplace, s, hamlet).
-%	path(marketplace, e, keep).
-
-%	path(keep, w, marketplace).
-%	path(keep, s, cornfield).
-%	path(keep, n, dungeon).
-
-%	path(dungeion, s, keep).
-
 %people.
 	person(sellsword).
 	person(blacksmith).
@@ -88,8 +72,6 @@ talk_to(Z):-
 %list items and nearby locations.
 list_things:-
 	list_stuff.
-%DEPRECATED
-%	list_locations.
 
 %check bag
 check_bag:-
@@ -101,12 +83,6 @@ list_my_stuff:-
 	write('i have a '), write(X), nl, fail,
 	in_bag(X).
 
-%check what i can travel to
-%DEPRECATED
-%list_locations:-
-%	current_location([X,Y]),
-%	write('i can go '), write(Y), write(' to get to the '), write(Z), nl, fail.
-%list_locations(_).
 
 %travel 1 grid position in the direction specified, unless that takes them to a wall.
 travel(I):-
