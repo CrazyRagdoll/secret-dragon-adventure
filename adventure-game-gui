@@ -1,6 +1,7 @@
 % first, must create the dialog window by using the dialog editor
 % and EXPORTING to the I/E window. From there, copy its contents
 % and paste them to this window, as below:
+
 my_gui :- 
    _S1 = [ws_caption,ws_sysmenu,dlg_ownedbyprolog],
    _S2 = [ws_child,ws_border,ws_visible,ws_vscroll,lbs_sort],
@@ -14,14 +15,18 @@ my_gui :-
    wccreate( (my_gui,11000), static,  ` Location`,                                                                                                    10, 430, 100,  20, _S3 ),
    wccreate( (my_gui,11001), static,  ` Inventory`,                                                                                                  190, 430, 100,  20, _S3 ),
    wccreate( (my_gui,4001),  listbox, `List2`,                                                                                                       110, 430,  70,  20, _S4 ),
-   wccreate( (my_gui,1000),  button,  `Update Locations!`,                                                                                            30, 400, 130,  20, _S5 ),
-   wccreate( (my_gui,1001),  button,  `Update Inventory!`,                                                                                           210, 400, 130,  20, _S5 ),
+   wccreate( (my_gui,1000),  button,  `Update Locations!`,                                                                                            20, 400, 120,  20, _S5 ),
+   wccreate( (my_gui,1001),  button,  `Update Inventory!`,                                                                                           210, 400, 110,  20, _S5 ),
    wccreate( (my_gui,1002),  button,  `Exit`,                                                                                                        320,  10,  40,  20, _S5 ),
    wccreate( (my_gui,11002), static,  `~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`,    0, 380, 370,  10, _S6 ),
    wccreate( (my_gui,1003),  button,  `N`,                                                                                                            40, 310,  20,  20, _S5 ),
    wccreate( (my_gui,1004),  button,  `E`,                                                                                                            60, 330,  20,  20, _S5 ),
    wccreate( (my_gui,1005),  button,  `S`,                                                                                                            40, 350,  20,  20, _S5 ),
-   wccreate( (my_gui,1006),  button,  `W`,                                                                                                            20, 330,  20,  20, _S5 ).
+   wccreate( (my_gui,1006),  button,  `W`,                                                                                                            20, 330,  20,  20, _S5 ),
+   wccreate( (my_gui,1007),  button,  `X`,                                                                                                           330, 400,  20,  20, _S5 ),
+   wccreate( (my_gui,1008),  button,  `X`,                                                                                                           150, 400,  20,  20, _S5 ).
+
+
 
 doit:-							
 	my_gui,						
@@ -62,6 +67,19 @@ my_gui_handler((my_gui,1001), msg_button,_,_):-
 my_gui_handler((my_gui,1000), msg_button,_,_):-		
 	update_locations,			
 	wshow(my_gui,0).	
+
+%clearing the location and inventory fields
+my_gui_handler((my_gui,1008), msg_button,_,_):-
+	wlbxget((my_gui,4000),0,T),T=''.
+my_gui_handler((my_gui,1008), msg_button,_,_):-
+	wlbxdel((my_gui,4000),0),
+	my_gui_handler((my_gui,1008),msg_button,_,_).
+
+my_gui_handler((my_gui,1007), msg_button,_,_):-
+	wlbxget((my_gui,4002),0,T),T=''.
+my_gui_handler((my_gui,1008), msg_button,_,_):-
+	wlbxdel((my_gui,4002),0),
+	my_gui_handler((my_gui,1007),msg_button,_,_).
 
 %filling contnents into Inventory & location lists.
 fill_inventory(X):-
