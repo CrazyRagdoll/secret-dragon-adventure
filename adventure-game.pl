@@ -106,3 +106,15 @@ travel(X):-
 	retract(current_location(Y)),
 	assert(current_location(Z)),
 	write('you make your way to the '), write(Z), nl, !.
+	
+%GUI CODE
+update_inventory:-
+	in_bag(X),
+	fill_inventory(X),
+	fail.
+
+update_locations:-
+	current_location(X),
+	path(X,Y,Z),
+	fill_locations(Z),
+	fail.
