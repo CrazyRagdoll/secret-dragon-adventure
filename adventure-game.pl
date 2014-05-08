@@ -1,16 +1,15 @@
 %declare current_location as dynamic, so it can change.
-:- dynamic current_location/1, in_hand/1, in_bag/1, is_at/2.
+:- dynamic current_location/2, in_hand/1, in_bag/1, is_at/2, object_at/2.
 :-retractall(current_location(_)).
 
 %initial setup.
-	current_location(hamlet). % start at grid position 0,0
+	current_location([1,1]). % start at grid position 0,0
 
 %location of stuff
 	is_at(hamlet, sellsword).
 	is_at(marketplace, blacksmith).
 	is_at(keep, mesanth).
 	
-
 %in bag
 	in_bag(bread).
 	in_bag(canteen).
@@ -18,31 +17,44 @@
 %in hand
 	in_hand(shortsword).
 %world
-	coord(hamlet, '0,0').
-	coord(cornfield, '0,1').
-	coord(marketplace, '1,0').
-	coord(keep, '1,1').
-	coord(dungeon, '1,2').
+%	coord(hamlet, '0,0').
+%	coord(cornfield, '0,1').
+%	coord(marketplace, '1,0').
+%	coord(keep, '1,1').
+%	coord(dungeon, '1,2').
+
+%walls limit how far the player can move
+	limit([_,0], s).
+	limit([7,_], e).
+	limit([_,7], n).
+	limit([0,_], w).
 
 %world paths
-	path(hamlet, e, cornfield).
-	path(hamlet, n, marketplace).
+%	path(hamlet, e, cornfield).
+%	path(hamlet, n, marketplace).
 
-	path(cornfield, w, hamlet).
-	path(cornfield, n, keep).
+%	path(cornfield, w, hamlet).
+%	path(cornfield, n, keep).
 
-	path(marketplace, s, hamlet).
-	path(marketplace, e, keep).
+%	path(marketplace, s, hamlet).
+%	path(marketplace, e, keep).
 
-	path(keep, w, marketplace).
-	path(keep, s, cornfield).
-	path(keep, n, dungeon).
+%	path(keep, w, marketplace).
+%	path(keep, s, cornfield).
+%	path(keep, n, dungeon).
 
-	path(dungeion, s, keep).
+%	path(dungeion, s, keep).
 
 %people.
 	person(sellsword).
 	person(blacksmith).
+
+%experimenting with different forms of specifying that a location is occupied by something.
+	monster([X,Y]):-
+		assert(object_at([(X + 1),Y], roar)),
+		assert(object_at([(X - 1),Y], roar)),
+		assert(object_at([X, (Y + 1)], roar)),
+		assert(object_at([X, (Y - 1)], roar)).
 
 %responses from NPCs
 	response(sellsword, 'So you''re the one looking for ol'' Mesanth aye? well, i too have quested to defeat the Beast, but i could not find him, all i found was what remains of the places it has visited. Do not make the same mistake i did.').
@@ -53,37 +65,31 @@ start:-
 
 %observe current surroundings.
 observe:-
-	current_location(X),
-	coord(X, Y),
-	write('i am at the '),
-	write(X), nl,
-	write('grid position '),
-	write(Y), nl,
+	current_location([X,Y]),
+	write('i am at grid position '),
+	write([X,Y]), nl,
 	list_things, !.
 
 %list all things where the player currently is.
-%TODO:due to Issue #2, a location can only contain one thing, due to the fail condition needed to
-%loop through the facts. could be re-implemented if the nearby items and nearby locations are listed
-%under seperated actions.
-list_stuff(X):-
-	current_location(X),
-	is_at(X, THING),
-	write('you notice a '), write(THING), write(' is located here.'), nl, fail.
+list_stuff:-
+	current_location([X,Y]),
+	object_at([X,Y], Z),
+	write('you notice a '), write(Z), write(' is located here.'), nl, fail.
 list_stuff(_).
 
 %talk to X, X must be a person and be where the player is.
-talk_to(X):-
-	current_location(Z),
-	person(X),
-	is_at(Z, X),
-	response(X, T),
+talk_to(Z):-
+	current_location([X,Y]),
+	person(Z),
+	is_at([X,Y], Z),
+	response(Z, T),
 	write(T), nl, !.
 
 %list items and nearby locations.
 list_things:-
-	current_location(X),
-	list_stuff(X),
-	list_locations(X).
+	list_stuff.
+%DEPRECATED
+%	list_locations.
 
 %check bag
 check_bag:-
@@ -96,27 +102,31 @@ list_my_stuff:-
 	in_bag(X).
 
 %check what i can travel to
-list_locations(X):-
-	current_location(X),
-	path(X,Y,Z),
-	write('i can go '), write(Y), write(' to get to the '), write(Z), nl, fail.
-list_locations(_).
+%DEPRECATED
+%list_locations:-
+%	current_location([X,Y]),
+%	write('i can go '), write(Y), write(' to get to the '), write(Z), nl, fail.
+%list_locations(_).
 
-%travel to a new grid position
-travel(X):-
-	current_location(Y),
-	path(Y,X,Z),
-	retract(current_location(Y)),
-	assert(current_location(Z)),
-	write('you make your way to the '), write(Z), nl, !.
-
+%travel 1 grid position in the direction specified, unless that takes them to a wall.
+travel(I):-
+	current_location([OX,OY]),(
+	(I = n,
+		NEWY is OY + 1, not(limit([OX,NEWY], I)), retract(current_location([OX,OY])),assert(current_location([OX,NEWY]))),!;
+	(I = e,
+		NEWX is OX + 1, not(limit([NEWX,OY], I)), retract(current_location([OX,OY])),assert(current_location([NEWX, OY]))), !;
+	(I = s,
+		NEWY is OY +(-1), not(limit([OX,NEWY], I)), retract(current_location([OX,OY])),assert(current_location([OX,NEWY]))), !;
+	(I = w,
+		NEWX is OX +(-1), not(limit([NEWX,OX], I)), retract(current_location([OX,OY])),assert(current_location([NEWX,OY]))), !),
+	write('you have travelled '), write(I), write(' and arrived safely.').
 %pull out an object in the players inventory.
-equip(X):-
-	current_location(Z),
-	in_bag(X), (in_bag(X);is_at(Z,X)),
+equip(Z):-
+	current_location([X,Y]),
+	in_bag(Z), (in_bag(Z);is_at(Z,X)),
 	\+person(X),
-	in_hand(Y),
-	retract(in_hand(Y)),
-	in_bag(X), (retract(in_bag(X));retract(is_at(Z,X))),
-	assert(in_bag(Y)),
-	assert(in_hand(X)), !.
+	in_hand(E),
+	retract(in_hand(E)),
+	in_bag(Z), (retract(in_bag(Z));retract(object_at(Z,[X,Y]))),
+	assert(in_bag(E)),
+	assert(in_hand(Z)), !.
