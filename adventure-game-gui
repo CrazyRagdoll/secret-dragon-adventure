@@ -9,22 +9,19 @@ my_gui :-
    _S4 = [ws_child,ws_border,lbs_sort],
    _S5 = [ws_child,ws_tabstop,ws_visible,bs_pushbutton,bs_text,bs_center,bs_vcenter],
    _S6 = [ws_child,ws_visible,ws_ex_staticedge,ss_left],
-   wdcreate(  my_gui,        `Dragon Adventure`,                                                                                                    1114,  89, 376, 528, _S1 ),
+   wdcreate(  my_gui,        `Dragon Adventure`,                                                                                                    1103,  91, 376, 528, _S1 ),
    wccreate( (my_gui,4000),  listbox, `List1`,                                                                                                        10, 450, 170,  50, _S2 ),
    wccreate( (my_gui,4002),  listbox, `List3`,                                                                                                       190, 450, 170,  50, _S2 ),
    wccreate( (my_gui,11000), static,  ` Location`,                                                                                                    10, 430, 100,  20, _S3 ),
    wccreate( (my_gui,11001), static,  ` Inventory`,                                                                                                  190, 430, 100,  20, _S3 ),
    wccreate( (my_gui,4001),  listbox, `List2`,                                                                                                       110, 430,  70,  20, _S4 ),
-   wccreate( (my_gui,1000),  button,  `Update Locations!`,                                                                                            20, 400, 120,  20, _S5 ),
-   wccreate( (my_gui,1001),  button,  `Update Inventory!`,                                                                                           210, 400, 110,  20, _S5 ),
    wccreate( (my_gui,1002),  button,  `Exit`,                                                                                                        320,  10,  40,  20, _S5 ),
-   wccreate( (my_gui,11002), static,  `~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`,    0, 380, 370,  10, _S6 ),
-   wccreate( (my_gui,1003),  button,  `N`,                                                                                                            40, 310,  20,  20, _S5 ),
-   wccreate( (my_gui,1004),  button,  `E`,                                                                                                            60, 330,  20,  20, _S5 ),
-   wccreate( (my_gui,1005),  button,  `S`,                                                                                                            40, 350,  20,  20, _S5 ),
-   wccreate( (my_gui,1006),  button,  `W`,                                                                                                            20, 330,  20,  20, _S5 ),
-   wccreate( (my_gui,1007),  button,  `X`,                                                                                                           330, 400,  20,  20, _S5 ),
-   wccreate( (my_gui,1008),  button,  `X`,                                                                                                           150, 400,  20,  20, _S5 ).
+   wccreate( (my_gui,11002), static,  `~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`,    0, 410, 370,  10, _S6 ),
+   wccreate( (my_gui,1003),  button,  `N`,                                                                                                            40, 340,  20,  20, _S5 ),
+   wccreate( (my_gui,1004),  button,  `E`,                                                                                                            60, 360,  20,  20, _S5 ),
+   wccreate( (my_gui,1005),  button,  `S`,                                                                                                            40, 380,  20,  20, _S5 ),
+   wccreate( (my_gui,1006),  button,  `W`,                                                                                                            20, 360,  20,  20, _S5 ),
+   wccreate( (my_gui,1000),  button,  `Start`,                                                                                                        10,  10, 100,  20, _S5 ).
 
 
 
@@ -34,11 +31,10 @@ doit:-
 	window_handler(my_gui,my_gui_handler),		
 	show_dialog(my_gui).				
  
-%my_gui_handler((my_gui,1000), msg_button,_,_):-
-%	wtext((my_gui,8000), Text),
-%	writeq(Text),
-%	nl,
-%	update_actions.
+my_gui_handler((my_gui,1000), msg_button,_,_):-
+	start,
+	update_inventory,
+	update_locations.
 
 %Quit button
 my_gui_handler((my_gui,1002), msg_button,_,_):-			
@@ -51,13 +47,28 @@ check_close(B,C):-
 
 %Movement buttons, N,S,E,W
 my_gui_handler((my_gui,1003), msg_button,_,_):-
-	travel(n).
+	clear_location.
+my_gui_handler((my_gui,1003), msg_button,_,_):-
+	travel(n),
+	update_locations.
+
 my_gui_handler((my_gui,1004), msg_button,_,_):-
-	travel(e).
+	clear_location.
+my_gui_handler((my_gui,1004), msg_button,_,_):-
+	travel(e),
+	update_locations.
+
 my_gui_handler((my_gui,1005), msg_button,_,_):-
-	travel(s).
+	clear_location.
+my_gui_handler((my_gui,1005), msg_button,_,_):-
+	travel(s),
+	update_locations.
+
 my_gui_handler((my_gui,1006), msg_button,_,_):-
-	travel(w).			
+	clear_location.
+my_gui_handler((my_gui,1006), msg_button,_,_):-
+	travel(w),
+	update_locations.		
 
 %Updating Inventory & Location buttons
 my_gui_handler((my_gui,1001), msg_button,_,_):-
@@ -77,7 +88,7 @@ my_gui_handler((my_gui,1008), msg_button,_,_):-
 
 my_gui_handler((my_gui,1007), msg_button,_,_):-
 	wlbxget((my_gui,4002),0,T),T=''.
-my_gui_handler((my_gui,1008), msg_button,_,_):-
+my_gui_handler((my_gui,1007), msg_button,_,_):-
 	wlbxdel((my_gui,4002),0),
 	my_gui_handler((my_gui,1007),msg_button,_,_).
 
