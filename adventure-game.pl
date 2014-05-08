@@ -1,5 +1,5 @@
 %declare current_location as dynamic, so it can change.
-:- dynamic current_location/1.
+:- dynamic current_location/1, in_hand/1, in_bag/1, is_at/2.
 :-retractall(current_location(_)).
 
 %initial setup.
@@ -9,11 +9,14 @@
 	is_at(hamlet, sellsword).
 	is_at(marketplace, blacksmith).
 	is_at(keep, mesanth).
+	
 
 %in bag
-	in_bag(shortsword).
 	in_bag(bread).
 	in_bag(canteen).
+
+%in hand
+	in_hand(shortsword).
 %world
 	coord(hamlet, '0,0').
 	coord(cornfield, '0,1').
@@ -106,3 +109,14 @@ travel(X):-
 	retract(current_location(Y)),
 	assert(current_location(Z)),
 	write('you make your way to the '), write(Z), nl, !.
+
+%pull out an object in the players inventory.
+equip(X):-
+	current_location(Z),
+	in_bag(X), (in_bag(X);is_at(Z,X)),
+	\+person(X),
+	in_hand(Y),
+	retract(in_hand(Y)),
+	in_bag(X), (retract(in_bag(X));retract(is_at(Z,X))),
+	assert(in_bag(Y)),
+	assert(in_hand(X)), !.
