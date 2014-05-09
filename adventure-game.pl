@@ -1,11 +1,6 @@
 %declare current_location as dynamic, so it can change.
 :- dynamic current_location/1, in_hand/1, in_bag/1, is_at/2, monster/1, game_over/2, check_danger/1.
 :-retractall(current_location(_)).
-
-%location of stuff
-	is_at(hamlet, sellsword).
-	is_at(marketplace, blacksmith).
-	is_at(keep, mesanth).
 	
 %in bag
 	in_bag(bread).
