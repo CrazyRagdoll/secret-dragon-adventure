@@ -1,9 +1,6 @@
 %declare current_location as dynamic, so it can change.
-:- dynamic current_location/2, in_hand/1, in_bag/1, is_at/2, object_at/2.
+:- dynamic current_location/1, in_hand/1, in_bag/1, is_at/2, monster/1, game_over/2, check_danger/1.
 :-retractall(current_location(_)).
-
-%initial setup.
-	current_location([1,1]). % start at grid position 0,0
 
 %location of stuff
 	is_at(hamlet, sellsword).
@@ -33,19 +30,37 @@
 	person(sellsword).
 	person(blacksmith).
 
-%experimenting with different forms of specifying that a location is occupied by something.
-	monster([X,Y]):-
-		assert(object_at([(X + 1),Y], roar)),
-		assert(object_at([(X - 1),Y], roar)),
-		assert(object_at([X, (Y + 1)], roar)),
-		assert(object_at([X, (Y - 1)], roar)).
+%locations with no danger.
+	check_danger([X,Y]):-
+		not(monster([X,Y]));
+		assert(game_over(X,Y)).
 
-%responses from NPCs
-	response(sellsword, 'So you''re the one looking for ol'' Mesanth aye? well, i too have quested to defeat the Beast, but i could not find him, all i found was what remains of the places it has visited. Do not make the same mistake i did.').
+%game over!
+	game_over(X,Y):-
+		write('Oh no! you were defeated at position: '), write(X), write(','), write(Y).
+	
+%experimenting with different forms of specifying that a location is occupied by something, and moving a monster around the map.
+setup_world:-
+	assert(current_location([1,1])), % start at grid position 0,0
+	assert(monster([4, 5])).	 % spawn a monster.
+		
+%update_world:-
+	%monster_decide.
+
+monster_update(I):-
+	monster([OX,OY]), (
+	(I = n, NEWY is OY + 1, not(limit([OX,NEWY], I)), retract(monster([OX,OY])),assert(monster([OX,NEWY]))),!;
+	(I = e, NEWX is OX + 1, not(limit([NEWX,OY], I)), retract(monster([OX,OY])),assert(monster([NEWX, OY]))), !;
+	(I = s, NEWY is OY +(-1), not(limit([OX,NEWY], I)), retract(monster([OX,OY])),assert(monster([OX,NEWY]))), !;
+	(I = w, NEWX is OX +(-1), not(limit([NEWX,OX], I)), retract(monster([OX,OY])),assert(monster([NEWX,OY]))), !).
+
+	monster_decide:-
+		I is 'e',
+		monster_update(I).
 
 %give back story and observe initial location.
 start:-
-	write('You are an adventurer who has travelled far, you journey to defeat the largest dragon in the land, Mesanth Eater of Sheep, has brought you here.'), nl, observe.
+	write('You are an adventurer who has travelled far, you journey to defeat the largest dragon in the land, Mesanth Eater of Sheep, has brought you here.'), nl, setup_world, observe.
 
 %observe current surroundings.
 observe:-
@@ -53,13 +68,14 @@ observe:-
 	write('i am at grid position '),
 	write([X,Y]), nl,
 	list_things, !.
-
+	
 %list all things where the player currently is.
 list_stuff:-
 	current_location([X,Y]),
-	object_at([X,Y], Z),
-	write('you notice a '), write(Z), write(' is located here.'), nl, fail.
-list_stuff(_).
+	(monster([X,Y]),write('you notice a monster nearby.'), nl, !).
+	%roar([X,Y]),write('you hear a nearby roar.'),nl, !).
+list_stuff:-
+	write('theres nothing here.').
 
 %talk to X, X must be a person and be where the player is.
 talk_to(Z):-
@@ -95,7 +111,8 @@ travel(I):-
 		NEWY is OY +(-1), not(limit([OX,NEWY], I)), retract(current_location([OX,OY])),assert(current_location([OX,NEWY]))), !;
 	(I = w,
 		NEWX is OX +(-1), not(limit([NEWX,OX], I)), retract(current_location([OX,OY])),assert(current_location([NEWX,OY]))), !),
-	write('you have travelled '), write(I), write(' and arrived safely.').
+	write('you have travelled '), write(I), write(' and arrived safely.'), observe.
+
 %pull out an object in the players inventory.
 equip(Z):-
 	current_location([X,Y]),
