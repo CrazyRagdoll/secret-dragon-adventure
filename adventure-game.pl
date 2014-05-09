@@ -37,10 +37,11 @@
 setup_world:-
 	assert(current_location([1,1])), % start at grid position 0,0
 	assert(monster([4, 5])).	 % spawn a monster.
-		
-%update_world:-
-	%monster_decide.
 
+%this will update the monsters and check if the player has died	
+%update_world:-
+
+%move the monster in the I direction
 monster_update(I):-
 	monster([OX,OY]), (
 	(I = n, NEWY is OY + 1, not(limit([OX,NEWY], I)), retract(monster([OX,OY])),assert(monster([OX,NEWY]))),!;
@@ -48,6 +49,7 @@ monster_update(I):-
 	(I = s, NEWY is OY +(-1), not(limit([OX,NEWY], I)), retract(monster([OX,OY])),assert(monster([OX,NEWY]))), !;
 	(I = w, NEWX is OX +(-1), not(limit([NEWX,OX], I)), retract(monster([OX,OY])),assert(monster([NEWX,OY]))), !).
 
+%the heuristic for pathfinding will be placed here.
 	monster_decide:-
 		I is 'e',
 		monster_update(I).
