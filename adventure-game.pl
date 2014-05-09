@@ -13,12 +13,6 @@
 
 %in hand
 	in_hand(shortsword).
-%world
-%	coord(hamlet, '0,0').
-%	coord(cornfield, '0,1').
-%	coord(marketplace, '1,0').
-%	coord(keep, '1,1').
-%	coord(dungeon, '1,2').
 
 %walls limit how far the player can move
 	limit([_,0], s).
