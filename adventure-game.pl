@@ -31,23 +31,21 @@
 %experimenting with different forms of specifying that a location is occupied by something, and moving a monster around the map.
 setup_world:-
 	assert(current_location([1,1])), % start at grid position 0,0
-	assert(monster([4, 5], 'punchy')).	 % spawn punchy the monster.
+	assert(monster([4, 5], punchy)).	 % spawn punchy the monster.
 
 %this will update the monsters and check if the player has died	
 %update_world:-
 
 %move the monster in the I direction
-monster_update(I):-
-	monster([OX,OY],Z), (
-	(I = n, NEWY is OY + 1, not(limit([OX,NEWY], I)), retract(monster([OX,OY],Z)),assert(monster([OX,NEWY],Z))),!;
-	(I = e, NEWX is OX + 1, not(limit([NEWX,OY], I)), retract(monster([OX,OY],Z)),assert(monster([NEWX, OY],Z))), !;
-	(I = s, NEWY is OY +(-1), not(limit([OX,NEWY], I)), retract(monster([OX,OY],Z)),assert(monster([OX,NEWY],Z))), !;
-	(I = w, NEWX is OX +(-1), not(limit([NEWX,OX], I)), retract(monster([OX,OY],Z)),assert(monster([NEWX,OY],Z))), !).
+monster_update([X,Y],Z):-
+	monster([_,_],Z),
+	retract(monster([_,_],Z)),
+	assert(monster([X,Y],Z)).
 
 %the heuristic for pathfinding will be placed here.
-	monster_decide:-
-		I is 'e',
-		monster_update(I).
+	%monster_decide:-
+		%I is 'e',
+		%monster_update(I).
 
 %give back story and observe initial location.
 start:-
@@ -114,6 +112,23 @@ equip(Z):-
 	in_bag(Z), (retract(in_bag(Z));retract(object_at(Z,[X,Y]))),
 	assert(in_bag(E)),
 	assert(in_hand(Z)), !.
+
+%find the shortest path
+pathme((X,Y),(NX,NY)):-
+	monster([X,Y],Z),
+	current_location([PX,PY]),
+	distance([X,Y],[PX,PY],[DX,DY]),
+	adjacent((X,Y),(TX,TY)),
+	distance([TX,TY],[PX,PY],[TDX,TDY]),
+	(TDX<DX;TDY<DY),
+	NX is TX, NY is TY,
+	monster_update([NX,NY],Z).
+
+
+%distance between two points
+distance([X,Y],[PX,PY],[DX,DY]):-
+	DX is X - PX,
+	DY is Y - PY.	
 
 %find adjacent squares
 adjacent((X,Y),(X,NY)):-
