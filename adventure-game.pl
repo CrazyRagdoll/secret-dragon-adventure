@@ -104,7 +104,7 @@ travel(I):-
 		NEWX is OX +(-1), not(limit([NEWX,OX], I)), retract(current_location([OX,OY])),assert(current_location([NEWX,OY]))), !),
 	write('you have travelled '), write(I), write(' and arrived safely.'), observe.
 
-%pull out an object in the players inventory.
+%pull out an object in the players inventory or pick it up from the floor
 equip(Z):-
 	current_location([X,Y]),
 	in_bag(Z), (in_bag(Z);is_at(Z,X)),
@@ -114,3 +114,20 @@ equip(Z):-
 	in_bag(Z), (retract(in_bag(Z));retract(object_at(Z,[X,Y]))),
 	assert(in_bag(E)),
 	assert(in_hand(Z)), !.
+
+%find adjacent squares
+adjacent((X,Y),(X,NY)):-
+	Y < 7,
+	NY is Y + 1.
+
+adjacent((X,Y),(X,NY)):-
+	Y > 0,
+	NY is Y+(-1).
+
+adjacent((X,Y),(NX,Y)):-
+	X < 7,
+	NX is X + 1.
+
+adjacent((X,Y),(NX,Y)):-
+	X > 1,
+	NX is X + (-1).
