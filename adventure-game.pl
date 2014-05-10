@@ -1,5 +1,5 @@
 %declare current_location as dynamic, so it can change.
-:- dynamic current_location/1, in_hand/1, in_bag/1, is_at/2, monster/1, game_over/2, check_danger/1.
+:- dynamic current_location/1, in_hand/1, in_bag/1, is_at/2, monster/2, game_over/2, check_danger/1.
 :-retractall(current_location(_)).
 	
 %in bag
@@ -21,7 +21,7 @@
 
 %locations with no danger.
 	check_danger([X,Y]):-
-		not(monster([X,Y]));
+		not(monster([X,Y],_));
 		assert(game_over(X,Y)).
 
 %game over!
@@ -31,18 +31,18 @@
 %experimenting with different forms of specifying that a location is occupied by something, and moving a monster around the map.
 setup_world:-
 	assert(current_location([1,1])), % start at grid position 0,0
-	assert(monster([4, 5])).	 % spawn a monster.
+	assert(monster([4, 5], 'punchy')).	 % spawn punchy the monster.
 
 %this will update the monsters and check if the player has died	
 %update_world:-
 
 %move the monster in the I direction
 monster_update(I):-
-	monster([OX,OY]), (
-	(I = n, NEWY is OY + 1, not(limit([OX,NEWY], I)), retract(monster([OX,OY])),assert(monster([OX,NEWY]))),!;
-	(I = e, NEWX is OX + 1, not(limit([NEWX,OY], I)), retract(monster([OX,OY])),assert(monster([NEWX, OY]))), !;
-	(I = s, NEWY is OY +(-1), not(limit([OX,NEWY], I)), retract(monster([OX,OY])),assert(monster([OX,NEWY]))), !;
-	(I = w, NEWX is OX +(-1), not(limit([NEWX,OX], I)), retract(monster([OX,OY])),assert(monster([NEWX,OY]))), !).
+	monster([OX,OY],Z), (
+	(I = n, NEWY is OY + 1, not(limit([OX,NEWY], I)), retract(monster([OX,OY],Z)),assert(monster([OX,NEWY],Z))),!;
+	(I = e, NEWX is OX + 1, not(limit([NEWX,OY], I)), retract(monster([OX,OY],Z)),assert(monster([NEWX, OY],Z))), !;
+	(I = s, NEWY is OY +(-1), not(limit([OX,NEWY], I)), retract(monster([OX,OY],Z)),assert(monster([OX,NEWY],Z))), !;
+	(I = w, NEWX is OX +(-1), not(limit([NEWX,OX], I)), retract(monster([OX,OY],Z)),assert(monster([NEWX,OY],Z))), !).
 
 %the heuristic for pathfinding will be placed here.
 	monster_decide:-
@@ -63,7 +63,7 @@ observe:-
 %list all things where the player currently is.
 list_stuff:-
 	current_location([X,Y]),
-	(monster([X,Y]),write('you notice a monster nearby.'), nl, !).
+	(monster([X,Y],Z),write('you notice '),write(Z), write(' is nearby.'), nl, !).
 	%roar([X,Y]),write('you hear a nearby roar.'),nl, !).
 list_stuff:-
 	write('theres nothing here.').
@@ -117,15 +117,15 @@ equip(Z):-
 
 %find adjacent squares
 adjacent((X,Y),(X,NY)):-
-	Y < 7,
+	Y < 6,
 	NY is Y + 1.
 
 adjacent((X,Y),(X,NY)):-
-	Y > 0,
-	NY is Y+(-1).
+	Y > 1,
+	NY is Y + (-1).
 
 adjacent((X,Y),(NX,Y)):-
-	X < 7,
+	X < 6,
 	NX is X + 1.
 
 adjacent((X,Y),(NX,Y)):-
