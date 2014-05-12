@@ -122,13 +122,13 @@ pathme:-
 	monster([X,Y],Z),
 	distance([X,Y],[DX,DY]),
 	adjacent([X,Y],[TX,TY]),
-	distance([TX,TY],[TDX,TDY]),(
-	(TDX<DX,not(TDX=<(-1));TDY<DY,not(TDY=<(-1)),
-	NX is TX, NY is TY,
+	distance([TX,TY],[TDX,TDY]),
+	(TDX<DX,not(TDX=<(-1));TDY<DY,not(TDY=<(-1))),
+	(NX is TX, NY is TY,
 	monster_update([NX,NY], Z), !);
-	(TDX>DX,not(TDX>=(1));TDY>DY,not(TDY>=(1)),
-	NX is TX, NY is TY,
-	monster_update([NX,NY], Z), !)).
+	(TDX>DX,not(TDX>=(1));TDY>DY,not(TDY>=(1))),
+	(NX is TX, NY is TY,
+	monster_update([NX,NY], Z),!).
 
 pathme:-
 	write('You lost Nelarth in the woods!'),
@@ -141,21 +141,17 @@ distance([X,Y],[DX,DY]):-
 
 %find adjacent squares
 adjacent([X,Y],[X,NY]):-
-	Y < 6,
 	NY is Y + 1,
 	not(limit([X,NY],_)).
 
 adjacent([X,Y],[X,NY]):-
-	Y > 1,
 	NY is Y + (-1),
 	not(limit([X,NY],_)).
 
 adjacent([X,Y],[NX,Y]):-
-	X < 6,
 	NX is X + 1,
 	not(limit([NX,Y],_)).
 
 adjacent([X,Y],[NX,Y]):-
-	X > 1,
 	NX is X + (-1),
 	not(limit([NX,Y],_)).
