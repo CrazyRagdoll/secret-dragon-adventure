@@ -1,6 +1,6 @@
-%declare current_location as dynamic, so it can change.
+%declare as dynamic, so it can change.
 :- dynamic current_location/1, in_hand/1, in_bag/1, is_at/2, monster/2, game_over/2, check_danger/1.
-:-retractall(current_location(_)).
+:-retractall([current_location(_), monster([_,_],_)]).
 	
 %in bag
 	in_bag(bread).
@@ -31,15 +31,15 @@
 %experimenting with different forms of specifying that a location is occupied by something, and moving a monster around the map.
 setup_world:-
 	assert(current_location([1,1])), % start at grid position 0,0
-	assert(monster([4, 5], punchy)).	 % spawn punchy the monster.
+	assert(monster([4, 5], nelarth)).	 % spawn nelarth the monster.
 
 %this will update the monsters and check if the player has died	
 %update_world:-
 
 %move the monster in the I direction
 monster_update([X,Y],Z):-
-	monster([_,_],Z),
-	retract(monster([_,_],Z)),
+	monster([OX,OY],Z),
+	retract(monster([OX,OY],Z)),
 	assert(monster([X,Y],Z)).
 
 %the heuristic for pathfinding will be placed here.
@@ -49,7 +49,7 @@ monster_update([X,Y],Z):-
 
 %give back story and observe initial location.
 start:-
-	write('You are an adventurer who has travelled far, you journey to defeat the largest dragon in the land, Mesanth Eater of Sheep, has brought you here.'), nl, setup_world, observe.
+	write('You are an adventurer who has travelled far, you journey to defeat the largest dragon in the land, Nelarth, Eater of Sheep, has brought you here.'), nl, setup_world, observe.
 
 %observe current surroundings.
 observe:-
@@ -62,7 +62,6 @@ observe:-
 list_stuff:-
 	current_location([X,Y]),
 	(monster([X,Y],Z),write('you notice '),write(Z), write(' is nearby.'), nl, !).
-	%roar([X,Y]),write('you hear a nearby roar.'),nl, !).
 list_stuff:-
 	write('theres nothing here.').
 
@@ -100,7 +99,7 @@ travel(I):-
 		NEWY is OY +(-1), not(limit([OX,NEWY], I)), retract(current_location([OX,OY])),assert(current_location([OX,NEWY]))), !;
 	(I = w,
 		NEWX is OX +(-1), not(limit([NEWX,OX], I)), retract(current_location([OX,OY])),assert(current_location([NEWX,OY]))), !),
-	write('you have travelled '), write(I), write(' and arrived safely.'), observe.
+	write('you have travelled '), write(I), write(' and arrived safely.'), nl, pathme, observe, !.
 
 %pull out an object in the players inventory or pick it up from the floor
 equip(Z):-
@@ -114,15 +113,15 @@ equip(Z):-
 	assert(in_hand(Z)), !.
 
 %find the shortest path
-pathme((X,Y),(NX,NY)):-
+pathme:-
 	monster([X,Y],Z),
 	current_location([PX,PY]),
 	distance([X,Y],[PX,PY],[DX,DY]),
-	adjacent((X,Y),(TX,TY)),
+	adjacent([X,Y],[TX,TY]),
 	distance([TX,TY],[PX,PY],[TDX,TDY]),
 	(TDX<DX;TDY<DY),
 	NX is TX, NY is TY,
-	monster_update([NX,NY],Z).
+	monster_update([NX,NY], Z).
 
 
 %distance between two points
@@ -131,18 +130,18 @@ distance([X,Y],[PX,PY],[DX,DY]):-
 	DY is Y - PY.	
 
 %find adjacent squares
-adjacent((X,Y),(X,NY)):-
+adjacent([X,Y],[X,NY]):-
 	Y < 6,
 	NY is Y + 1.
 
-adjacent((X,Y),(X,NY)):-
+adjacent([X,Y],[X,NY]):-
 	Y > 1,
 	NY is Y + (-1).
 
-adjacent((X,Y),(NX,Y)):-
+adjacent([X,Y],[NX,Y]):-
 	X < 6,
 	NX is X + 1.
 
-adjacent((X,Y),(NX,Y)):-
+adjacent([X,Y],[NX,Y]):-
 	X > 1,
 	NX is X + (-1).
