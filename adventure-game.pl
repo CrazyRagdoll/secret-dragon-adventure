@@ -7,6 +7,7 @@
 	limit([7,_], e).
 	limit([_,7], n).
 	limit([0,_], w).
+	limit([3,3],_).
 
 %locations with no danger.
 	check_danger([X,Y]):-
@@ -122,10 +123,10 @@ pathme:-
 	distance([X,Y],[DX,DY]),
 	adjacent([X,Y],[TX,TY]),
 	distance([TX,TY],[TDX,TDY]),(
-	((TDX<DX,not(TDX=<(-1));TDY<DY,not(TDY=<(-1))),
+	((TDX<DX,not(TDX=<(-1)), not(limit([TDX,TDY],_));TDY<DY,not(TDY=<(-1)), not(limit([TDX,TDY],_))),
 	NX is TX, NY is TY,
 	monster_update([NX,NY], Z), !);
-	((TDX>DX,not(TDX>=(1));TDY>DY,not(TDY>=(1))),
+	(TDX>DX,not(TDX>=(1)),not(limit([TDX,TDY],_));(TDY>DY,not(TDY>=(1)),not(limit([TDX,TDY],_))),
 	NX is TX, NY is TY,
 	monster_update([NX,NY], Z), !)).
 
