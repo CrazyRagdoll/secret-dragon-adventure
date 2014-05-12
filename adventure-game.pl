@@ -26,7 +26,7 @@
 
 %game over!
 	game_over(X,Y):-
-		write('Oh no! you were defeated at position: '), write(X), write(','), write(Y).
+		write('Oh no! you were defeated at position: '), write(X), write(','), write(Y), !.
 	
 %experimenting with different forms of specifying that a location is occupied by something, and moving a monster around the map.
 setup_world:-
@@ -115,17 +115,24 @@ equip(Z):-
 	assert(in_bag(E)),
 	assert(in_hand(Z)), !.
 
-%find the shortest path
+%check that a monster is on the player
+pathme:-
+	monster([X,Y],_),
+	current_location([X,Y]),
+	game_over(X,Y).
+
+%find shortest path.
 pathme:-
 	monster([X,Y],Z),
-	current_location([PX,PY]),
-	distance([X,Y],[PX,PY],[DX,DY]),
+	distance([X,Y],[DX,DY]),
 	adjacent([X,Y],[TX,TY]),
-	distance([TX,TY],[TDX,TDY]),
-	(TDX<DX;TDY<DY),
+	distance([TX,TY],[TDX,TDY]),(
+	((TDX<DX,not(TDX=<(-1));TDY<DY,not(TDY=<(-1))),
 	NX is TX, NY is TY,
-	monster_update([NX,NY], Z), !.
-
+	monster_update([NX,NY], Z), !);
+	((TDX>DX,not(TDX>=(1));TDY>DY,not(TDY>=(1))),
+	NX is TX, NY is TY,
+	monster_update([NX,NY], Z), !)).
 
 %distance between two points
 distance([X,Y],[DX,DY]):-
