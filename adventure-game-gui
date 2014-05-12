@@ -53,7 +53,8 @@ my_gui :-
    wccreate( (my_gui,9036),  rich,    ``,                 140, 110,  40,  40, _S6 ),
    wccreate( (my_gui,9046),  rich,    ``,                 180, 110,  40,  40, _S6 ),
    wccreate( (my_gui,9056),  rich,    ``,                 220, 110,  40,  40, _S6 ),
-   wccreate( (my_gui,9066),  rich,    ``,                 260, 110,  40,  40, _S6 ).
+   wccreate( (my_gui,9066),  rich,    ``,                 260, 110,  40,  40, _S6 ),
+   wccreate( (my_gui,1006),  button,  `Pick up Egg!`,     180, 360, 130,  20, _S2 ).
 
 
 
@@ -70,7 +71,9 @@ my_gui_handler((my_gui,1001), msg_button,_,_):-
 	update_equip;
 	update_inventory;
 	draw_monster,
-	draw_player.
+	draw_player,
+	draw_egg,
+	draw_wall.
 
 %Quit button
 my_gui_handler((my_gui,1000), msg_button,_,_):-			
@@ -83,20 +86,33 @@ check_close(B,C):-
 
 %Movement buttons, N,S,E,W
 my_gui_handler((my_gui,1004), msg_button,_,_):-
+	clear_monster,
 	move_player_N,
 	move_monster.
 
 my_gui_handler((my_gui,1003), msg_button,_,_):-
+	clear_monster,
 	move_player_E,
 	move_monster.
 
 my_gui_handler((my_gui,1002), msg_button,_,_):-
+	clear_monster,
 	move_player_S,
 	move_monster.
 
 my_gui_handler((my_gui,1005), msg_button,_,_):-
+	clear_monster,
 	move_player_W,
 	move_monster.	
+
+%Picking up and droping the Egg!
+my_gui_handler((my_gui,1006), msg_button,_,_):-
+	clear_equip;
+	clear_inventory;
+	equip(egg);
+	update_equip;
+	update_inventory.
+
 
 %filling contnents into Inventory, equipment & location lists.
 fill_inventory(X):-
@@ -122,11 +138,6 @@ update_equip:-
 	fill_equip(X),
 	fail.
 
-update_coords:-
-	current_location([X,Y]),
-	fill_coord([X,Y]),
-	fail.
-
 draw_player:-
 	current_location([X,Y]),
 	Pos is 9000 + (X*10) + Y,
@@ -138,7 +149,20 @@ draw_monster:-
 	monster([X,Y],nelarth),
 	Pos is 9000 + (X*10) + Y,
 	gfx_begin((my_gui,Pos)),
-	gfx((rectangle(5, 5, 30, 30))),
+	gfx((rectangle(5, 5, 29, 29))),
+	gfx_end((my_gui,Pos)).
+
+draw_egg:-
+	is_at([X,Y],egg),
+	Pos is 9000 + (X*10) + Y,
+	gfx_begin((my_gui,Pos)),
+	gfx((ellipse(10,10,24,29))),
+	gfx_end((my_gui,Pos)).
+
+draw_wall:-
+	Pos is 9033,
+	gfx_begin((my_gui,Pos)),
+	gfx((ellipse(5,5,29,29))),
 	gfx_end((my_gui,Pos)).
 
 %clearing the location, inventory, coord, nsew, and equipt fields
@@ -174,30 +198,35 @@ clear_monster:-
 	gfx((rectangle(0, 0, 34,34))),
 	gfx_end((my_gui,Pos)).
 
+clear_egg:-
+	is_at([X,Y],egg),
+	Pos is 9000 + (X*10) + Y,
+	gfx_begin((my_gui,Pos)),
+	gfx((rectangle(0,0,34,34))),
+	gfx_end((my_gui,Pos)).
+
 %Moving player
 move_player_N:-
 	clear_player,
 	travel(n),
-	draw_player.
+	draw_player; draw_player.
 
 move_player_E:-
 	clear_player,
 	travel(e),
-	draw_player.
+	draw_player; draw_player.
 
 move_player_S:-
 	clear_player,
 	travel(s),
-	draw_player.
+	draw_player; draw_player.
 
 move_player_W:-
 	clear_player,
-	travel(s),
-	draw_player.
+	travel(w),
+	draw_player; draw_player.
 
 %Moving the monster
 move_monster:-
-	clear_monster,
-	pathme, 
 	draw_monster; draw_monster.
 
