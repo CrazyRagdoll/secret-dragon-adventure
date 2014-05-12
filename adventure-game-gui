@@ -8,52 +8,52 @@ my_gui :-
    _S4 = [ws_child,ws_visible,ss_left],
    _S5 = [ws_child,ws_border,ws_visible,lbs_sort],
    _S6 = [ws_child,ws_border,ws_visible,es_left,es_multiline,es_autohscroll,es_autovscroll],
-   wdcreate(  my_gui,        `Dragon Adventure`,          1132,  60, 366, 498, _S1 ),
-   wccreate( (my_gui,1000),  button,  `Exit`,              300,  10,  50,  20, _S2 ),
-   wccreate( (my_gui,1001),  button,  `Start Adventure!`,  110,  50, 140,  40, _S2 ),
-   wccreate( (my_gui,4002),  listbox, `List3`,             190, 410, 160,  50, _S3 ),
-   wccreate( (my_gui,11001), static,  `Inventory:`,        190, 390,  70,  20, _S4 ),
-   wccreate( (my_gui,4003),  listbox, `List4`,             270, 390,  80,  20, _S5 ),
-   wccreate( (my_gui,1002),  button,  `S`,                  70, 430,  20,  20, _S2 ),
-   wccreate( (my_gui,1003),  button,  `E`,                  90, 410,  20,  20, _S2 ),
-   wccreate( (my_gui,1004),  button,  `N`,                  70, 390,  20,  20, _S2 ),
-   wccreate( (my_gui,1005),  button,  `W`,                  50, 410,  20,  20, _S2 ),
-   wccreate( (my_gui,9011),  rich,    ``,                   60, 310,  40,  40, _S6 ),
-   wccreate( (my_gui,9021),  rich,    ``,                  100, 310,  40,  40, _S6 ),
-   wccreate( (my_gui,9031),  rich,    ``,                  140, 310,  40,  40, _S6 ),
-   wccreate( (my_gui,9041),  rich,    ``,                  180, 310,  40,  40, _S6 ),
-   wccreate( (my_gui,9051),  rich,    ``,                  220, 310,  40,  40, _S6 ),
-   wccreate( (my_gui,9061),  rich,    ``,                  260, 310,  40,  40, _S6 ),
-   wccreate( (my_gui,9012),  rich,    ``,                   60, 270,  40,  40, _S6 ),
-   wccreate( (my_gui,9022),  rich,    ``,                  100, 270,  40,  40, _S6 ),
-   wccreate( (my_gui,9032),  rich,    ``,                  140, 270,  40,  40, _S6 ),
-   wccreate( (my_gui,9042),  rich,    ``,                  180, 270,  40,  40, _S6 ),
-   wccreate( (my_gui,9052),  rich,    ``,                  220, 270,  40,  40, _S6 ),
-   wccreate( (my_gui,9062),  rich,    ``,                  260, 270,  40,  40, _S6 ),
-   wccreate( (my_gui,9013),  rich,    ``,                   60, 230,  40,  40, _S6 ),
-   wccreate( (my_gui,9023),  rich,    ``,                  100, 230,  40,  40, _S6 ),
-   wccreate( (my_gui,9033),  rich,    ``,                  140, 230,  40,  40, _S6 ),
-   wccreate( (my_gui,9043),  rich,    ``,                  180, 230,  40,  40, _S6 ),
-   wccreate( (my_gui,9053),  rich,    ``,                  220, 230,  40,  40, _S6 ),
-   wccreate( (my_gui,9063),  rich,    ``,                  260, 230,  40,  40, _S6 ),
-   wccreate( (my_gui,9014),  rich,    ``,                   60, 190,  40,  40, _S6 ),
-   wccreate( (my_gui,9024),  rich,    ``,                  100, 190,  40,  40, _S6 ),
-   wccreate( (my_gui,9034),  rich,    ``,                  140, 190,  40,  40, _S6 ),
-   wccreate( (my_gui,9044),  rich,    ``,                  180, 190,  40,  40, _S6 ),
-   wccreate( (my_gui,9054),  rich,    ``,                  220, 190,  40,  40, _S6 ),
-   wccreate( (my_gui,9064),  rich,    ``,                  260, 190,  40,  40, _S6 ),
-   wccreate( (my_gui,9015),  rich,    ``,                   60, 150,  40,  40, _S6 ),
-   wccreate( (my_gui,9025),  rich,    ``,                  100, 150,  40,  40, _S6 ),
-   wccreate( (my_gui,9035),  rich,    ``,                  140, 150,  40,  40, _S6 ),
-   wccreate( (my_gui,9045),  rich,    ``,                  180, 150,  40,  40, _S6 ),
-   wccreate( (my_gui,9055),  rich,    ``,                  220, 150,  40,  40, _S6 ),
-   wccreate( (my_gui,9065),  rich,    ``,                  260, 150,  40,  40, _S6 ),
-   wccreate( (my_gui,9016),  rich,    ``,                   60, 110,  40,  40, _S6 ),
-   wccreate( (my_gui,9026),  rich,    ``,                  100, 110,  40,  40, _S6 ),
-   wccreate( (my_gui,9036),  rich,    ``,                  140, 110,  40,  40, _S6 ),
-   wccreate( (my_gui,9046),  rich,    ``,                  180, 110,  40,  40, _S6 ),
-   wccreate( (my_gui,9056),  rich,    ``,                  220, 110,  40,  40, _S6 ),
-   wccreate( (my_gui,9066),  rich,    ``,                  260, 110,  40,  40, _S6 ).
+   wdcreate(  my_gui,        `Dragon Adventure`,          773,  81, 366, 498, _S1 ),
+   wccreate( (my_gui,1000),  button,  `Exit`,             300,  10,  50,  20, _S2 ),
+   wccreate( (my_gui,1001),  button,  `Start Adventure!`, 110,  50, 140,  40, _S2 ),
+   wccreate( (my_gui,4002),  listbox, `List3`,            150, 410, 200,  50, _S3 ),
+   wccreate( (my_gui,11001), static,  `Inventory:`,       150, 390,  70,  20, _S4 ),
+   wccreate( (my_gui,4003),  listbox, `List4`,            230, 390, 120,  20, _S5 ),
+   wccreate( (my_gui,1002),  button,  `S`,                 70, 430,  20,  20, _S2 ),
+   wccreate( (my_gui,1003),  button,  `E`,                 90, 410,  20,  20, _S2 ),
+   wccreate( (my_gui,1004),  button,  `N`,                 70, 390,  20,  20, _S2 ),
+   wccreate( (my_gui,1005),  button,  `W`,                 50, 410,  20,  20, _S2 ),
+   wccreate( (my_gui,9011),  rich,    ``,                  60, 310,  40,  40, _S6 ),
+   wccreate( (my_gui,9021),  rich,    ``,                 100, 310,  40,  40, _S6 ),
+   wccreate( (my_gui,9031),  rich,    ``,                 140, 310,  40,  40, _S6 ),
+   wccreate( (my_gui,9041),  rich,    ``,                 180, 310,  40,  40, _S6 ),
+   wccreate( (my_gui,9051),  rich,    ``,                 220, 310,  40,  40, _S6 ),
+   wccreate( (my_gui,9061),  rich,    ``,                 260, 310,  40,  40, _S6 ),
+   wccreate( (my_gui,9012),  rich,    ``,                  60, 270,  40,  40, _S6 ),
+   wccreate( (my_gui,9022),  rich,    ``,                 100, 270,  40,  40, _S6 ),
+   wccreate( (my_gui,9032),  rich,    ``,                 140, 270,  40,  40, _S6 ),
+   wccreate( (my_gui,9042),  rich,    ``,                 180, 270,  40,  40, _S6 ),
+   wccreate( (my_gui,9052),  rich,    ``,                 220, 270,  40,  40, _S6 ),
+   wccreate( (my_gui,9062),  rich,    ``,                 260, 270,  40,  40, _S6 ),
+   wccreate( (my_gui,9013),  rich,    ``,                  60, 230,  40,  40, _S6 ),
+   wccreate( (my_gui,9023),  rich,    ``,                 100, 230,  40,  40, _S6 ),
+   wccreate( (my_gui,9033),  rich,    ``,                 140, 230,  40,  40, _S6 ),
+   wccreate( (my_gui,9043),  rich,    ``,                 180, 230,  40,  40, _S6 ),
+   wccreate( (my_gui,9053),  rich,    ``,                 220, 230,  40,  40, _S6 ),
+   wccreate( (my_gui,9063),  rich,    ``,                 260, 230,  40,  40, _S6 ),
+   wccreate( (my_gui,9014),  rich,    ``,                  60, 190,  40,  40, _S6 ),
+   wccreate( (my_gui,9024),  rich,    ``,                 100, 190,  40,  40, _S6 ),
+   wccreate( (my_gui,9034),  rich,    ``,                 140, 190,  40,  40, _S6 ),
+   wccreate( (my_gui,9044),  rich,    ``,                 180, 190,  40,  40, _S6 ),
+   wccreate( (my_gui,9054),  rich,    ``,                 220, 190,  40,  40, _S6 ),
+   wccreate( (my_gui,9064),  rich,    ``,                 260, 190,  40,  40, _S6 ),
+   wccreate( (my_gui,9015),  rich,    ``,                  60, 150,  40,  40, _S6 ),
+   wccreate( (my_gui,9025),  rich,    ``,                 100, 150,  40,  40, _S6 ),
+   wccreate( (my_gui,9035),  rich,    ``,                 140, 150,  40,  40, _S6 ),
+   wccreate( (my_gui,9045),  rich,    ``,                 180, 150,  40,  40, _S6 ),
+   wccreate( (my_gui,9055),  rich,    ``,                 220, 150,  40,  40, _S6 ),
+   wccreate( (my_gui,9065),  rich,    ``,                 260, 150,  40,  40, _S6 ),
+   wccreate( (my_gui,9016),  rich,    ``,                  60, 110,  40,  40, _S6 ),
+   wccreate( (my_gui,9026),  rich,    ``,                 100, 110,  40,  40, _S6 ),
+   wccreate( (my_gui,9036),  rich,    ``,                 140, 110,  40,  40, _S6 ),
+   wccreate( (my_gui,9046),  rich,    ``,                 180, 110,  40,  40, _S6 ),
+   wccreate( (my_gui,9056),  rich,    ``,                 220, 110,  40,  40, _S6 ),
+   wccreate( (my_gui,9066),  rich,    ``,                 260, 110,  40,  40, _S6 ).
 
 
 
@@ -66,17 +66,11 @@ doit:-
 			
 %Start Button 
 my_gui_handler((my_gui,1001), msg_button,_,_):-
-	start.
-my_gui_handler((my_gui,1001), msg_button,_,_):-
-	update_equip.
-my_gui_handler((my_gui,1001), msg_button,_,_):-
-	update_inventory.
-my_gui_handler((my_gui,1001), msg_button,_,_):-
-	current_location([X,Y]),
-	Pos is 9000 + (X*10) + Y,
-	gfx_begin((my_gui,Pos)),
-	gfx(ellipse(5,5,30,30)),
-	gfx_end((my_gui,Pos)).
+	start,
+	update_equip;
+	update_inventory;
+	draw_monster,
+	draw_player.
 
 %Quit button
 my_gui_handler((my_gui,1000), msg_button,_,_):-			
@@ -89,24 +83,20 @@ check_close(B,C):-
 
 %Movement buttons, N,S,E,W
 my_gui_handler((my_gui,1004), msg_button,_,_):-
-	clear_player,
-	travel(n),
-	update_player; update_player.
+	move_player_N,
+	move_monster.
 
 my_gui_handler((my_gui,1003), msg_button,_,_):-
-	clear_player,
-	travel(e),
-	update_player; update_player.
+	move_player_E,
+	move_monster.
 
 my_gui_handler((my_gui,1002), msg_button,_,_):-
-	clear_player,
-	travel(s),
-	update_player; update_player.
+	move_player_S,
+	move_monster.
 
 my_gui_handler((my_gui,1005), msg_button,_,_):-
-	clear_player,
-	travel(w),
-	update_player; update_player.	
+	move_player_W,
+	move_monster.	
 
 %filling contnents into Inventory, equipment & location lists.
 fill_inventory(X):-
@@ -137,11 +127,18 @@ update_coords:-
 	fill_coord([X,Y]),
 	fail.
 
-update_player:-
+draw_player:-
 	current_location([X,Y]),
 	Pos is 9000 + (X*10) + Y,
 	gfx_begin((my_gui,Pos)),
-	gfx(ellipse(5,5,30,30)),
+	gfx(ellipse(5,5,29,29)),
+	gfx_end((my_gui,Pos)).
+
+draw_monster:-
+	monster([X,Y],nelarth),
+	Pos is 9000 + (X*10) + Y,
+	gfx_begin((my_gui,Pos)),
+	gfx((rectangle(5, 5, 30, 30))),
 	gfx_end((my_gui,Pos)).
 
 %clearing the location, inventory, coord, nsew, and equipt fields
@@ -169,3 +166,38 @@ clear_player:-
 	gfx_begin((my_gui,Pos)),
 	gfx((rectangle(0, 0, 34,34))),
 	gfx_end((my_gui,Pos)).
+
+clear_monster:-
+	monster([X,Y],nelarth),
+	Pos is 9000 + (X*10) + Y,
+	gfx_begin((my_gui,Pos)),
+	gfx((rectangle(0, 0, 34,34))),
+	gfx_end((my_gui,Pos)).
+
+%Moving player
+move_player_N:-
+	clear_player,
+	travel(n),
+	draw_player.
+
+move_player_E:-
+	clear_player,
+	travel(e),
+	draw_player.
+
+move_player_S:-
+	clear_player,
+	travel(s),
+	draw_player.
+
+move_player_W:-
+	clear_player,
+	travel(s),
+	draw_player.
+
+%Moving the monster
+move_monster:-
+	clear_monster,
+	pathme, 
+	draw_monster; draw_monster.
+
