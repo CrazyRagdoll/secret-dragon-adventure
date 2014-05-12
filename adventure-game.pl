@@ -2,22 +2,11 @@
 :- dynamic current_location/1, in_hand/1, in_bag/1, is_at/2, monster/2, game_over/2, check_danger/1.
 %:- retractall([retract(current_location([_,_])), retract(monster([_,_],_)]).
 	
-%in bag
-	in_bag(bread).
-	in_bag(canteen).
-
-%in hand
-	in_hand(shortsword).
-
 %walls limit how far the player can move
 	limit([_,0], s).
 	limit([7,_], e).
 	limit([_,7], n).
 	limit([0,_], w).
-
-%people.
-	person(sellsword).
-	person(blacksmith).
 
 %locations with no danger.
 	check_danger([X,Y]):-
@@ -31,10 +20,17 @@
 %experimenting with different forms of specifying that a location is occupied by something, and moving a monster around the map.
 setup_world:-
 %	retractall(_),
-	retract(current_location([_,_])); true,
-	retract(monster([_,_],_)); true,
-	assert(current_location([1,1])), % start at grid position 0,0
-	assert(monster([4, 5], nelarth)).	 % spawn nelarth the monster.
+	(retract(is_at([_,_],egg)); true),
+	(retract(current_location([_,_])); true),
+	(retract(monster([_,_],_)); true),
+	(retract(in_hand(_));true),
+	(retract(in_bag(_));true),
+	(assert(current_location([1,1]))), 	 % start at grid position 1,1
+	(assert(is_at([1,2],egg))),
+	(assert(monster([4, 5], nelarth))),	 % spawn nelarth the monster.
+	(assert(in_bag(bread))),
+	(assert(in_bag(canteen))),
+	(assert(in_hand(shortsword))).
 
 %this will update the monsters and check if the player has died	
 %update_world:-
@@ -64,7 +60,7 @@ observe:-
 %list all things where the player currently is.
 list_stuff:-
 	current_location([X,Y]),
-	(monster([X,Y],Z),write('you notice '),write(Z), write(' is nearby.'), nl, !).
+	((monster([X,Y],Z);is_at([X,Y],Z)),write('you notice '),write(Z), write(' is nearby.'), nl, !).
 list_stuff:-
 	write('theres nothing here.'), !.
 
@@ -106,12 +102,11 @@ travel(I):-
 
 %pull out an object in the players inventory or pick it up from the floor
 equip(Z):-
-	current_location([X,Y]),
-	in_bag(Z), (in_bag(Z);is_at(Z,X)),
-	\+person(X),
-	in_hand(E),
+	current_location(X),
+	in_hand(E), 
+	(in_bag(Z);is_at(X,Z)),
 	retract(in_hand(E)),
-	in_bag(Z), (retract(in_bag(Z));retract(object_at(Z,[X,Y]))),
+	(retract(in_bag(Z));retract(is_at(X,Z))),
 	assert(in_bag(E)),
 	assert(in_hand(Z)), !.
 
