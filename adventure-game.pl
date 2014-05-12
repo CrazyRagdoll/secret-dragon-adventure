@@ -1,6 +1,6 @@
 %declare as dynamic, so it can change.
 :- dynamic current_location/1, in_hand/1, in_bag/1, is_at/2, monster/2, game_over/2, check_danger/1.
-:-retractall([current_location(_), monster([_,_],_)]).
+%:- retractall([retract(current_location([_,_])), retract(monster([_,_],_)]).
 	
 %in bag
 	in_bag(bread).
@@ -30,6 +30,9 @@
 	
 %experimenting with different forms of specifying that a location is occupied by something, and moving a monster around the map.
 setup_world:-
+%	retractall(_),
+	retract(current_location([_,_])); true,
+	retract(monster([_,_],_)); true,
 	assert(current_location([1,1])), % start at grid position 0,0
 	assert(monster([4, 5], nelarth)).	 % spawn nelarth the monster.
 
@@ -63,7 +66,7 @@ list_stuff:-
 	current_location([X,Y]),
 	(monster([X,Y],Z),write('you notice '),write(Z), write(' is nearby.'), nl, !).
 list_stuff:-
-	write('theres nothing here.').
+	write('theres nothing here.'), !.
 
 %talk to X, X must be a person and be where the player is.
 talk_to(Z):-
@@ -118,16 +121,17 @@ pathme:-
 	current_location([PX,PY]),
 	distance([X,Y],[PX,PY],[DX,DY]),
 	adjacent([X,Y],[TX,TY]),
-	distance([TX,TY],[PX,PY],[TDX,TDY]),
+	distance([TX,TY],[TDX,TDY]),
 	(TDX<DX;TDY<DY),
 	NX is TX, NY is TY,
-	monster_update([NX,NY], Z).
+	monster_update([NX,NY], Z), !.
 
 
 %distance between two points
-distance([X,Y],[PX,PY],[DX,DY]):-
+distance([X,Y],[DX,DY]):-
+	current_location([PX,PY]),
 	DX is X - PX,
-	DY is Y - PY.	
+	DY is Y - PY.
 
 %find adjacent squares
 adjacent([X,Y],[X,NY]):-
