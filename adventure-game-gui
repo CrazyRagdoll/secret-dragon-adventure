@@ -71,9 +71,12 @@ my_gui_handler((my_gui,1001), msg_button,_,_):-
 	update_equip;
 	update_inventory;
 	draw_monster,
+	draw_house,
 	draw_player,
 	draw_egg,
-	draw_wall.
+	draw_wall,
+	draw_wall1,
+	draw_wall2.
 
 %Quit button
 my_gui_handler((my_gui,1000), msg_button,_,_):-			
@@ -88,31 +91,34 @@ check_close(B,C):-
 my_gui_handler((my_gui,1004), msg_button,_,_):-
 	clear_monster,
 	move_player_N,
+	draw_house,
 	move_monster.
 
 my_gui_handler((my_gui,1003), msg_button,_,_):-
 	clear_monster,
 	move_player_E,
+	draw_house,
 	move_monster.
 
 my_gui_handler((my_gui,1002), msg_button,_,_):-
 	clear_monster,
 	move_player_S,
+	draw_house,
 	move_monster.
 
 my_gui_handler((my_gui,1005), msg_button,_,_):-
 	clear_monster,
 	move_player_W,
+	draw_house,
 	move_monster.	
 
 %Picking up and droping the Egg!
 my_gui_handler((my_gui,1006), msg_button,_,_):-
 	clear_equip;
 	clear_inventory;
-	equip(egg);
-	update_equip;
+	equip(egg),
+	update_equip,
 	update_inventory.
-
 
 %filling contnents into Inventory, equipment & location lists.
 fill_inventory(X):-
@@ -122,10 +128,6 @@ fill_inventory(X):-
 fill_equip(X):-
 	atom_string(X,Y),
 	wlbxadd((my_gui,4003),-1,Y).
-
-fill_coord([X,Y]):-
-	atom_string([X,Y],Z),
-	wlbxadd((my_gui,4004),-1,Z).
 
 %GUI-CODE
 update_inventory:-
@@ -159,11 +161,39 @@ draw_egg:-
 	gfx((ellipse(10,10,24,29))),
 	gfx_end((my_gui,Pos)).
 
-draw_wall:-
+draw_wall1:-
 	Pos is 9033,
 	gfx_begin((my_gui,Pos)),
-	gfx((ellipse(5,5,29,29))),
+	gfx((ellipse(5,5,20,20))),
+	gfx((ellipse(15,5,30,20))),
+	gfx((ellipse(15,15,30,30))),
+	gfx((ellipse(5,15,20,30))),
 	gfx_end((my_gui,Pos)).
+
+draw_wall2:-
+	Pos is 9043,
+	gfx_begin((my_gui,Pos)),
+	gfx((ellipse(5,5,20,20))),
+	gfx((ellipse(15,5,30,20))),
+	gfx((ellipse(15,15,30,30))),
+	gfx((ellipse(5,15,20,30))),
+	gfx_end((my_gui,Pos)).
+
+draw_wall:-
+	Pos is 9034,
+	gfx_begin((my_gui,Pos)),
+	gfx((ellipse(5,5,20,20))),
+	gfx((ellipse(15,5,30,20))),
+	gfx((ellipse(15,15,30,30))),
+	gfx((ellipse(5,15,20,30))),
+	gfx_end((my_gui,Pos)).
+
+draw_house:-
+	gfx_begin((my_gui,9011)),
+	gfx((rectangle(7, 10, 27, 29))),
+	gfx((rectangle(4, 5, 30, 11))),
+	gfx((rectangle(15, 15, 24, 29))),
+	gfx_end((my_gui,9011)).
 
 %clearing the location, inventory, coord, nsew, and equipt fields
 clear_inventory:-
@@ -177,12 +207,6 @@ clear_equip:-
 clear_equip:-
 	wlbxdel((my_gui,4003),0),
 	clear_equip.
-
-clear_NSEW:-
-	wlbxget((my_gui,4000),0,T),T=''.
-clear_NSEW:-
-	wlbxdel((my_gui,4000),0),
-	clear_NSEW.
 
 clear_player:-
 	current_location([X,Y]),
@@ -228,5 +252,5 @@ move_player_W:-
 
 %Moving the monster
 move_monster:-
-	draw_monster; draw_monster.
+	draw_monster.
 
