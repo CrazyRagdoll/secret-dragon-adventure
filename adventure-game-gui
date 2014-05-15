@@ -1,6 +1,4 @@
-% first, must create the dialog window by using the dialog editor
-% and EXPORTING to the I/E window. From there, copy its contents
-% and paste them to this window, as below:
+
 my_gui :- 
    _S1 = [ws_caption,ws_sysmenu,dlg_ownedbyprolog],
    _S2 = [ws_child,ws_tabstop,ws_visible,bs_pushbutton,bs_text,bs_center,bs_vcenter],
@@ -65,7 +63,7 @@ doit:-
 	window_handler(my_gui,my_gui_handler),		
 	show_dialog(my_gui).	
 			
-%Start Button 
+%Start Button, this will run the start function which will add all of the game objects into the world, it will then display all of this infomation onto the GUI
 my_gui_handler((my_gui,1001), msg_button,_,_):-
 	start,
 	update_equip;
@@ -87,7 +85,7 @@ my_gui_handler((my_gui,1000), msg_button,_,_):-
 check_close(B,C):-				
 	B=1, C=1.	
 
-%Movement buttons, N,S,E,W
+%Movement buttons, N,S,E,W. These clear the player and monster from the GUI and then update them.
 my_gui_handler((my_gui,1004), msg_button,_,_):-
 	clear_monster,
 	move_player_N,
@@ -112,13 +110,11 @@ my_gui_handler((my_gui,1005), msg_button,_,_):-
 	draw_house,
 	move_monster.	
 
-%Picking up and droping the Egg!
+%Picking up and droping the Egg! This button will clear and update the inventory and equipment as well as equiping the egg
 my_gui_handler((my_gui,1006), msg_button,_,_):-
-	clear_equip;
-	clear_inventory;
-	equip(egg),
-	update_equip,
-	update_inventory.
+	clear_stuff;
+	equip(egg);
+	update_stuff.
 
 %filling contnents into Inventory, equipment & location lists.
 fill_inventory(X):-
@@ -129,7 +125,7 @@ fill_equip(X):-
 	atom_string(X,Y),
 	wlbxadd((my_gui,4003),-1,Y).
 
-%GUI-CODE
+%These update the text lists which hold the details about the inventory of the player and what he has in his hands.
 update_inventory:-
 	in_bag(X),
 	fill_inventory(X),
@@ -140,6 +136,7 @@ update_equip:-
 	fill_equip(X),
 	fail.
 
+%These functions are used to get the position [X,Y] of the different objects in the world and then draw them to the apropriate tile.
 draw_player:-
 	current_location([X,Y]),
 	Pos is 9000 + (X*10) + Y,
@@ -229,7 +226,16 @@ clear_egg:-
 	gfx((rectangle(0,0,34,34))),
 	gfx_end((my_gui,Pos)).
 
-%Moving player
+%Joinging the clear and update functions together to make for easier reading.
+clear_stuff:-
+	clear_equip;
+	clear_inventory.
+
+update_stuff:-
+	update_equip;
+	update_inventory.
+
+%Moving player - Consists of clearing the player off of the screen and then moving & updating his location then drawing him back
 move_player_N:-
 	clear_player,
 	travel(n),
